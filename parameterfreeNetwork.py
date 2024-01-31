@@ -32,18 +32,18 @@ class parameterfreeNetwork:
 				# Adding edges from original node to fit node
 				edges[n, (n, 'fit', m)] = {'REF': self._determine_REF('start', n, m)}
 				# Adding edges from fit node to dull node
-				edges[('fit', n, m), ('dull', n, m)] = {'REF': self._determine_REF('drive', n, m)}
+				edges[(n, 'fit', m), (n, 'dull', m)] = {'REF': self._determine_REF('drive', n, m)}
 				# Adding edges from fit node to end node
-				edges[('fit', n, m), m] = {'REF': self._determine_REF('visit', n, m)}
+				edges[(n, 'fit', m), m] = {'REF': self._determine_REF('visit', n, m)}
 			elif state == 'dull':
 				# Adding edges from original node to dull node
 				edges[n, (n, 'dull', m)] = {'REF': self._determine_REF('start', n, m)}
 				# Adding edges from dull node to fit node invoking rest
-				edges[('dull', n, m), ('fit', n, m)] = {'REF': self._determine_REF('rest', n, m)}
+				edges[(n, 'dull', m), (n, 'fit', m)] = {'REF': self._determine_REF('rest', n, m)}
 				# Adding edges from dull node to fit node invoking break
-				edges[('dull', n, m), ('fit', n, m)] = {'REF': self._determine_REF('break', n, m)}
+				edges[(n, 'dull', m), (n, 'fit', m)] = {'REF': self._determine_REF('break', n, m)}
 				# Adding edges from dull node to end node
-				edges[('dull', n, m), m] = {'REF': self._determine_REF('visit', n, m)}
+				edges[(n, 'dull', m), m] = {'REF': self._determine_REF('visit', n, m)}
 		return edges
 
 
