@@ -35,8 +35,8 @@ bestLabel = label.Label(paraNetwork._getDepot(), len(paraNetwork.originalNetwork
 bestLabel.time = float('inf')   #Setting the cost to infinity to compare the cost with the created labels
 
 for l in algo:
-	if (l.path[len(l.path)-1] == 3 and l.time < bestLabel.time):
-		bestLabel = label
+	if (len(l.path) == 3 and l.time < bestLabel.time):
+		bestLabel = l
 
 print(f"BEST LABEL: {bestLabel}")
 
