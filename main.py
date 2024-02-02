@@ -35,11 +35,10 @@ bestLabel = label.Label(paraNetwork._getDepot(), len(paraNetwork.originalNetwork
 bestLabel.time = float('inf')   #Setting the cost to infinity to compare the cost with the created labels
 
 for l in algo:
-	if (len(l.path) == 3 and l.time < bestLabel.time):
+	if (len(l.path) == 5 and l.time < bestLabel.time):
 		bestLabel = l
 
 print(f"BEST LABEL: {bestLabel}")
-
 
 # Network and parameterfree network verification check
 """

@@ -42,10 +42,10 @@ def dominate(labelList):
     # Loop over all labels except the last one
     for i, label in enumerate(labelList[:-1]):
         # Check if the last visited node in detailedPath is the same for both labels
-        if label.detailedPath[-1] == lastLabel.detailedPath[-1] and label.timeToNext <= lastLabel.timeToNext: # Make sure to not dominate intermediate nodes that have travelled further, but share the same last intermediate node
+        if label.detailedPath[-1] == lastLabel.detailedPath[-1]: # Make sure to not dominate intermediate nodes that have travelled further, but share the same last intermediate node
             # Compare all attributes except 'elem'
-            last_attrs = (lastLabel.time, lastLabel.drive_R, lastLabel.drive_B, lastLabel.elapsed_R)
-            current_attrs = (label.time, label.drive_R, label.drive_B, label.elapsed_R)
+            last_attrs = (lastLabel.time, lastLabel.timeToNext, lastLabel.drive_R, lastLabel.drive_B, lastLabel.elapsed_R)
+            current_attrs = (label.time, label.timeToNext, label.drive_R, label.drive_B, label.elapsed_R)
 
             # Separate comparison for 'elem' if it exists
             elem_comparison = True  # Default to True if 'elem' attribute doesn't exist

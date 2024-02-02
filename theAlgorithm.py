@@ -33,8 +33,6 @@ def algorithm(paraNetwork):
 		currentNodeTuple = currentLabel.path[-1]
 		interNodeTuple = currentLabel.detailedPath[-1]
 		edgesFromNode = {edge: data for edge, data in paraNetwork.edges.items() if edge[0] == currentNodeTuple or edge[0] == interNodeTuple}
-	
-
 
 		# Processing label if the current one is not done
 		if (labels[iterator].done == False):
