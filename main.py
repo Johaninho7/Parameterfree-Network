@@ -25,6 +25,7 @@ interNodes = paraNetwork._getIntermediateNodes()
 #pprint.pprint(interNodes)
 # Print all edges in parameterfree network
 #pprint.pprint(paraNetwork._getEdges())
+#pprint.pprint(paraNetwork._getEdges().keys())
 
 # Run the algortihm
 algo = theAlgorithm.algorithm(paraNetwork)
@@ -35,7 +36,7 @@ bestLabel = label.Label(paraNetwork._getDepot(), len(paraNetwork.originalNetwork
 bestLabel.time = float('inf')   #Setting the cost to infinity to compare the cost with the created labels
 
 for l in algo:
-	if (len(l.path) == 5 and l.time < bestLabel.time):
+	if (len(l.path) == 6 and l.time < bestLabel.time):
 		bestLabel = l
 
 print(f"BEST LABEL: {bestLabel}")

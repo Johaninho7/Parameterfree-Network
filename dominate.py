@@ -41,11 +41,14 @@ def dominate(labelList):
 
     # Loop over all labels except the last one
     for i, label in enumerate(labelList[:-1]):
+        # Check and remove 'B' and 'R' from detailedPath for comparison
+        label.detailedPath[-1] = normaliseDetailedElement(label.detailedPath[-1])
+        lastLabel.detailedPath[-1] = normaliseDetailedElement(lastLabel.detailedPath[-1])
         # Check if the last visited node in detailedPath is the same for both labels
-        if label.detailedPath[-1] == lastLabel.detailedPath[-1]: # Make sure to not dominate intermediate nodes that have travelled further, but share the same last intermediate node
+        if label.detailedPath[-1] == lastLabel.detailedPath[-1]:
             # Compare all attributes except 'elem'
-            last_attrs = (lastLabel.time, lastLabel.timeToNext, lastLabel.drive_R, lastLabel.drive_B, lastLabel.elapsed_R)
-            current_attrs = (label.time, label.timeToNext, label.drive_R, label.drive_B, label.elapsed_R)
+            last_attrs = (lastLabel.time, lastLabel.timeToNext, lastLabel.drive_R, lastLabel.drive_B, lastLabel.elapsed_R, lastLabel.latest_R)
+            current_attrs = (label.time, label.timeToNext, label.drive_R, label.drive_B, label.elapsed_R, label.latest_R)
 
             # Separate comparison for 'elem' if it exists
             elem_comparison = True  # Default to True if 'elem' attribute doesn't exist
@@ -70,3 +73,15 @@ def dominate(labelList):
             continue
 
     return dominatedLabels
+
+
+def normaliseDetailedElement(element):
+    # Check if the element is a tuple
+    if isinstance(element, tuple):
+        # If second element of tuple is 'fit R' or 'fit B', normalise  to 'fit'
+        if element[1] in ['fit R', 'fit B']:
+            return (element[0], 'fit', element[-1])
+        else:
+            return element
+    return element
+    

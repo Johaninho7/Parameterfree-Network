@@ -30,20 +30,20 @@ class parameterfreeNetwork:
 		for (state, n, m) in self.intermediate_nodes:
 			if state == 'fit':
 				# Adding edges from original node to fit node
-				edges[n, (n, 'fit', m)] = {'REF': self._determine_REF('start', n, m)}
+				edges[n, (n, 'fit', m)] = {'REF': self._determine_REF('start')}
 				# Adding edges from fit node to dull node
-				edges[(n, 'fit', m), (n, 'dull', m)] = {'REF': self._determine_REF('drive', n, m)}
+				edges[(n, 'fit', m), (n, 'dull', m)] = {'REF': self._determine_REF('drive')}
 				# Adding edges from fit node to end node
-				edges[(n, 'fit', m), m] = {'REF': self._determine_REF('visit', n, m)}
+				edges[(n, 'fit', m), m] = {'REF': self._determine_REF('visit')}
 			elif state == 'dull':
 				# Adding edges from original node to dull node
-				edges[n, (n, 'dull', m)] = {'REF': self._determine_REF('start', n, m)}
+				edges[n, (n, 'dull', m)] = {'REF': self._determine_REF('start')}
 				# Adding edges from dull node to fit node invoking rest
-				edges[(n, 'dull', m), (n, 'fit', m)] = {'REF': self._determine_REF('rest', n, m)}
+				edges[(n, 'dull', m), (n, 'fit R', m)] = {'REF': self._determine_REF('rest')}
 				# Adding edges from dull node to fit node invoking break
-				edges[(n, 'dull', m), (n, 'fit', m)] = {'REF': self._determine_REF('break', n, m)}
+				edges[(n, 'dull', m), (n, 'fit B', m)] = {'REF': self._determine_REF('break')}
 				# Adding edges from dull node to end node
-				edges[(n, 'dull', m), m] = {'REF': self._determine_REF('visit', n, m)}
+				edges[(n, 'dull', m), m] = {'REF': self._determine_REF('visit')}
 		return edges
 
 
@@ -85,7 +85,7 @@ class parameterfreeNetwork:
 			}
 		return attributes
 
-	def _determine_REF(self, transition_type, n, m):
+	def _determine_REF(self, transition_type):
 		# Define the REFs for different types of transitions
 		if transition_type == 'start':
 			# REF when starting from an original node to a fit node
@@ -93,9 +93,6 @@ class parameterfreeNetwork:
 		elif transition_type == 'drive':
 			# REF when driving, transitioning from fit to dull
 			return self._fdrive_delta
-		elif transition_type == 'rest_or_break':
-			# REF when resting or taking a break, transitioning from dull to fit
-			return self._frest_delta or self._fbreak_delta
 		elif transition_type == 'rest':
 			# REF when resting or taking a break, transitioning from dull to fit
 			return self._frest_delta
@@ -146,20 +143,20 @@ class parameterfreeNetwork:
 		print(f"\nDRIVING for {delta_l} after leaving: {label.detailedPath[-1]}.")
 
 	def _fbreak_delta(self, label, delta_l):
-		label.time += delta_l
+		label.time += delta_l if delta_l >= minTimeBreak else minTimeBreak
 		label.elapsed_R += delta_l
 		label.drive_B = 0
 		label.lBreak = minTimeBreak
-		print(f"\nBREAKING for {delta_l} after leaving: {label.detailedPath[-1]}.")
+		print(f"\nBREAKING for {delta_l if delta_l >= minTimeBreak else minTimeBreak} after leaving: {label.detailedPath[-1]}.")
 
 	def _frest_delta(self, label, delta_l):
-		label.time += delta_l
+		label.time += delta_l if delta_l >= minTimeRest else minTimeRest
 		label.drive_R = 0
 		label.elapsed_R = 0
 		label.drive_B = 0
 		label.lBreak = minTimeBreak
 		label.rest = minTimeRest
-		print(f"\nRESTING for {delta_l} after leaving: {label.detailedPath[-1]}.")
+		print(f"\nRESTING for {delta_l if delta_l >= minTimeRest else minTimeRest} after leaving: {label.detailedPath[-1]}.")
 
 	def _fvisit_nm(self, label, t_min_m, t_max_m, serviceTime_m, nextNodeId, dist_nm):
 		label.time = max(label.time, t_min_m) + serviceTime_m
